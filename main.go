@@ -11,9 +11,9 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-type RoleMap map[string]string
+type roleMap map[string]string
 
-var GuildMap = make(map[string]RoleMap)
+var guildMap = make(map[string]roleMap)
 
 func main() {
 	//Get auth token
@@ -48,26 +48,26 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Author.ID == s.State.User.ID {
 		return
 	}
-	if _, ok := GuildMap[m.GuildID]; ok {
-		avocadoRole = GuildMap[m.GuildID]["avocado"]
-		modocadoRole = GuildMap[m.GuildID]["modocado"]
+	if _, ok := guildMap[m.GuildID]; ok {
+		avocadoRole = guildMap[m.GuildID]["avocado"]
+		modocadoRole = guildMap[m.GuildID]["modocado"]
 	} else {
 		roles, err := s.GuildRoles(m.GuildID)
-		roleMap := RoleMap{}
+		rmap := roleMap{}
 		if err != nil {
 			log.Println("Error retrieving roles")
 		}
 		for _, role := range roles {
 			if strings.ToLower(role.Name) == "avocado" {
-				roleMap["avocado"] = role.ID
+				rmap["avocado"] = role.ID
 			}
 			if strings.ToLower(role.Name) == "modocado" {
-				roleMap["modocado"] = role.ID
+				rmap["modocado"] = role.ID
 			}
 		}
-		GuildMap[m.GuildID] = roleMap
-		avocadoRole = GuildMap[m.GuildID]["avocado"]
-		modocadoRole = GuildMap[m.GuildID]["modocado"]
+		guildMap[m.GuildID] = rmap
+		avocadoRole = guildMap[m.GuildID]["avocado"]
+		modocadoRole = guildMap[m.GuildID]["modocado"]
 	}
 	// Avocado user
 	if strings.HasPrefix(m.Content, "!avocado") {
