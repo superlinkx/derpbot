@@ -75,7 +75,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("Avocado'd %s uwu", m.Mentions[0].Mention()))
 	}
 	// Unavocado user
-	if strings.HasPrefix(m.Content, "!unavocado") {
+	if strings.HasPrefix(m.Content, "!unavocado") || strings.HasPrefix(m.Content, "!❌🥑") {
 		s.GuildMemberRoleRemove(m.GuildID, m.Mentions[0].ID, avocadoRole)
 		s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("Unavocado'd %s uwu", m.Mentions[0].Mention()))
 	}
