@@ -38,19 +38,19 @@ func main() {
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
 	<-sc
 	discord.Close()
-
 }
 
 func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	var avocadoRole string
-	var modocadoRole string
+	var baguetteRole string
 	//Ignore own messages
 	if m.Author.ID == s.State.User.ID {
 		return
 	}
+	//Get avocado role ids
 	if _, ok := guildMap[m.GuildID]; ok {
 		avocadoRole = guildMap[m.GuildID]["avocado"]
-		modocadoRole = guildMap[m.GuildID]["modocado"]
+		baguetteRole = guildMap[m.GuildID]["baguette"]
 	} else {
 		roles, err := s.GuildRoles(m.GuildID)
 		rmap := roleMap{}
@@ -61,13 +61,13 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 			if strings.ToLower(role.Name) == "avocado" {
 				rmap["avocado"] = role.ID
 			}
-			if strings.ToLower(role.Name) == "modocado" {
-				rmap["modocado"] = role.ID
+			if strings.ToLower(role.Name) == "baguette" {
+				rmap["baguette"] = role.ID
 			}
 		}
 		guildMap[m.GuildID] = rmap
 		avocadoRole = guildMap[m.GuildID]["avocado"]
-		modocadoRole = guildMap[m.GuildID]["modocado"]
+		baguetteRole = guildMap[m.GuildID]["baguette"]
 	}
 	// Avocado user
 	if strings.HasPrefix(m.Content, "!avocado") {
@@ -79,15 +79,15 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		s.GuildMemberRoleRemove(m.GuildID, m.Mentions[0].ID, avocadoRole)
 		s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("Unavocado'd %s uwu", m.Mentions[0].Mention()))
 	}
-	// Modocado user
-	if strings.HasPrefix(m.Content, "!modocado") {
-		fmt.Println(modocadoRole)
-		s.GuildMemberRoleAdd(m.GuildID, m.Mentions[0].ID, modocadoRole)
-		s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("Avocado'd %s uwu", m.Mentions[0].Mention()))
+	// Baguette user
+	if strings.HasPrefix(m.Content, "!baguette") {
+		fmt.Println(baguetteRole)
+		s.GuildMemberRoleAdd(m.GuildID, m.Mentions[0].ID, baguetteRole)
+		s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("Baguette'd %s uwu", m.Mentions[0].Mention()))
 	}
-	// Unmodocado user
-	if strings.HasPrefix(m.Content, "!unmodocado") {
-		s.GuildMemberRoleRemove(m.GuildID, m.Mentions[0].ID, modocadoRole)
-		s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("Unavocado'd %s uwu", m.Mentions[0].Mention()))
+	// Unbaguette user
+	if strings.HasPrefix(m.Content, "!unbaguette") {
+		s.GuildMemberRoleRemove(m.GuildID, m.Mentions[0].ID, baguetteRole)
+		s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("Unbaguette'd %s uwu", m.Mentions[0].Mention()))
 	}
 }
