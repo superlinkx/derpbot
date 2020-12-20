@@ -70,7 +70,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		baguetteRole = guildMap[m.GuildID]["baguette"]
 	}
 	// Avocado user
-	if strings.HasPrefix(m.Content, "!avocado") || strings.HasPrefix(m.Content, "!:avocado:") {
+	if strings.HasPrefix(m.Content, "!avocado") || strings.HasPrefix(m.Content, "!🥑") {
 		s.GuildMemberRoleAdd(m.GuildID, m.Mentions[0].ID, avocadoRole)
 		s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("Avocado'd %s uwu", m.Mentions[0].Mention()))
 	}
