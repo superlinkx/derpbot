@@ -43,6 +43,7 @@ func main() {
 func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	var avocadoRole string
 	var baguetteRole string
+	var ekksdeeRole string
 	//Ignore own messages
 	if m.Author.ID == s.State.User.ID {
 		return
@@ -51,6 +52,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if _, ok := guildMap[m.GuildID]; ok {
 		avocadoRole = guildMap[m.GuildID]["avocado"]
 		baguetteRole = guildMap[m.GuildID]["baguette"]
+		ekksdeeRole = guildMap[m.GuildID]["ekks dee"]
 	} else {
 		roles, err := s.GuildRoles(m.GuildID)
 		rmap := roleMap{}
@@ -64,10 +66,14 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 			if strings.ToLower(role.Name) == "baguette" {
 				rmap["baguette"] = role.ID
 			}
+			if strings.ToLower(role.Name) == "ekks dee" {
+				rmap["ekks dee"] = role.ID
+			}
 		}
 		guildMap[m.GuildID] = rmap
 		avocadoRole = guildMap[m.GuildID]["avocado"]
 		baguetteRole = guildMap[m.GuildID]["baguette"]
+		ekksdeeRole = guildMap[m.GuildID]["ekks dee"]
 	}
 	// Avocado user
 	if strings.HasPrefix(m.Content, "!avocado") || strings.HasPrefix(m.Content, "!🥑") {
@@ -89,5 +95,16 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if strings.HasPrefix(m.Content, "!unbaguette") {
 		s.GuildMemberRoleRemove(m.GuildID, m.Mentions[0].ID, baguetteRole)
 		s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("Unbaguette'd %s uwu", m.Mentions[0].Username))
+	}
+	// XD user
+	if strings.HasPrefix(m.Content, "!XD") || strings.HasPrefix(m.Content, "!😆") {
+		fmt.Println(ekksdeeRole)
+		s.GuildMemberRoleAdd(m.GuildID, m.Mentions[0].ID, ekksdeeRole)
+		s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("😆'd %s uwu", m.Mentions[0].Username))
+	}
+	// UnXD user
+	if strings.HasPrefix(m.Content, "!unXD") || strings.HasPrefix(m.Content, "!❌😆") {
+		s.GuildMemberRoleRemove(m.GuildID, m.Mentions[0].ID, ekksdeeRole)
+		s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("Un😆'd %s uwu", m.Mentions[0].Username))
 	}
 }
