@@ -48,7 +48,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Author.ID == s.State.User.ID {
 		return
 	}
-	//Get avocado role ids
+	//Get role ids
 	if _, ok := guildMap[m.GuildID]; ok {
 		avocadoRole = guildMap[m.GuildID]["avocado"]
 		baguetteRole = guildMap[m.GuildID]["baguette"]
